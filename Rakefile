@@ -34,7 +34,7 @@ SPEC =
     s.executables = ["redis-load"]
     s.test_file = "tests/ts_redis-load.rb"
     s.add_dependency("redis")
-    s.add_dependency("json/pure")
+    s.add_dependency("json_pure")
     s.add_dependency("siren")        
   end
       
