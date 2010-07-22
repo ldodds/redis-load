@@ -1,0 +1,4 @@
+== Release 0.1
+ First release to github
+ Added initial support for loading JSON into Redis. Path support not yet fully tested
+ Added basic command line tools for loading/saving

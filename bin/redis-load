@@ -1,0 +1,114 @@
+#!/usr/bin/env ruby
+require 'rubygems'
+require 'redis-load'
+
+require 'rubygems'
+require 'redis'
+require 'getoptlong'
+
+PROGRAM     = File::basename $0
+
+USAGE = <<-EOL 
+SYNOPSIS
+
+  #{ PROGRAM } mode [args]*
+
+DESCRIPTION
+
+MODE
+
+  load-json
+  	Load the contents of a json file as entries into a server
+
+  load-keys
+  	Load the contents of a file as key-value pairs. Must be: key,value
+  	
+  load-list
+    Load the contents of a file into a list. Each line is a list entry
+
+  load-set
+  	Load the contents of a file into a set. Each line is a set entry  
+  
+  load-zset
+  	Load the contents of a file into a sort set. Each line is a key-value pair of entry,score  
+
+  save-list
+    Save a list into a file
+  
+  save-set
+    Save a set into a file
+  
+  save-zset
+    Save a sorted set into a file
+  
+
+OPTIONS
+
+  --database            , -d
+    specify database
+  --help            , -?
+    show this message
+  --host            , -h
+    specify host on which server is running
+  --file            , -f
+    path to file containing the data to load    
+  --password            , -x
+    specify password to access server    
+  --port            , -p
+    specify port on which server is running    
+  --key				, -k
+  	specify a key into which data is loaded
+  	
+EOL
+
+mode = ARGV.shift
+
+opts = GetoptLong::new(
+         [ "--help"            , "-?" , GetoptLong::NO_ARGUMENT ],
+         [ "--host"         , "-h" , GetoptLong::REQUIRED_ARGUMENT ],
+         [ "--port"         , "-p" , GetoptLong::REQUIRED_ARGUMENT ],
+         [ "--password"        , "-x" , GetoptLong::REQUIRED_ARGUMENT ],
+         [ "--database"        , "-d" , GetoptLong::REQUIRED_ARGUMENT ],
+         [ "--key"        , "-k" , GetoptLong::REQUIRED_ARGUMENT ],                  
+         [ "--file"        , "-f" , GetoptLong::REQUIRED_ARGUMENT ],
+         [ "--jsonpath"        , "-j" , GetoptLong::REQUIRED_ARGUMENT ]                   
+       ).enum_for.inject({}) { |h, (k, v)| h.update k.delete('-') => v }
+
+mode = "help" if opts["--help"]
+
+if mode == "help"
+  USAGE.display  
+else
+  
+  if opts["file"] == nil
+  	abort USAGE
+  end
+  
+  if (mode != "load-json" && mode != "load-keys") && opts["key"] == nil
+    abort USAGE
+  end
+  
+  cmdline = RedisLoad::CommandLine.new(opts, ENV)
+  
+  case mode
+  	when "load-json"
+  		cmdline.load_json()  		    
+  	when "load-keys"
+  		cmdline.load_keys()  		  
+  	when "load-list"
+  		cmdline.load_list()
+  	when "load-set"
+  		cmdline.load_set()
+  	when "load-zset"
+  		cmdline.load_zset()
+  	when "save-list"
+  		cmdline.save_list()  		
+  	when "save-set"
+  		cmdline.save_set()  		
+  	when "save-zset"
+  		cmdline.save_zset()  		
+  	else
+  		puts "Unknown command"
+  end
+end
+         
