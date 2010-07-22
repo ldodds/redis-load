@@ -61,4 +61,7 @@ Save a sorted set into a file
   redis-load save-zset --key myzset --file myzset.txt
 
 Note that when saving a file any existing file will automatically be over-written.
- 
+
+== License
+
+redis-load is free and unencumbered public domain software. For more information, see http://unlicense.org/ or the accompanying UNLICENSE file. 
