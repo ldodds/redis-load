@@ -51,6 +51,11 @@ Load the contents of a file into a sort set. Each line is a key-value pair of en
 
     redis-load load-zset --key myzset --file myzset.txt
 
+Save json for some or all keys into a file:
+
+    redis-load save-json --file mydata.json
+    redis-load save-json --keys foo* --file mydata.json
+
 Save a list into a file:
 
     redis-load save-list --key mylist --file mylist.txt
