@@ -5,11 +5,11 @@ require 'rake/testtask'
 require 'rake/clean'
 
 NAME = "redis-load"
-VER = "0.1"
+VER = "0.2"
 
-RDOC_OPTS = ['--quiet', '--title', 'redis-load Reference', '--main', 'README']
+RDOC_OPTS = ['--quiet', '--title', 'redis-load Reference', '--main', 'README.md']
 
-PKG_FILES = %w( README Rakefile CHANGES ) + 
+PKG_FILES = %w( README.md Rakefile CHANGES ) + 
   Dir.glob("{bin,doc,tests,examples,lib}/**/*")
 
 CLEAN.include ['*.gem', 'pkg']  
@@ -20,7 +20,7 @@ SPEC =
     s.platform = Gem::Platform::RUBY
     s.required_ruby_version = ">= 1.8.5"    
     s.has_rdoc = true
-    s.extra_rdoc_files = ["README", "CHANGES"]
+    s.extra_rdoc_files = ["README.md", "CHANGES"]
     s.rdoc_options = RDOC_OPTS
     s.summary = "Utility of loading/saving data structures from Redis"
     s.description = s.summary
@@ -45,8 +45,8 @@ end
 Rake::RDocTask.new do |rdoc|
     rdoc.rdoc_dir = 'doc/rdoc'
     rdoc.options += RDOC_OPTS
-    rdoc.rdoc_files.include("README", "CHANGES", "lib/**/*.rb")
-    rdoc.main = "README"
+    rdoc.rdoc_files.include("README.md", "CHANGES", "lib/**/*.rb")
+    rdoc.main = "README.md"
     
 end
 

@@ -32,6 +32,9 @@ MODE
   load-zset
   	Load the contents of a file into a sort set. Each line is a key-value pair of entry,score  
 
+  save-json
+    Save all or some keys as JSON. Filter keys to be saved using the --keys parameter.
+    
   save-list
     Save a list into a file
   
@@ -58,6 +61,8 @@ OPTIONS
     specify port on which server is running    
   --key				, -k
   	specify a key into which data is loaded
+  --keys			, -e
+  	specify a pattern for matching keys
   	
 EOL
 
@@ -71,7 +76,8 @@ opts = GetoptLong::new(
          [ "--database"        , "-d" , GetoptLong::REQUIRED_ARGUMENT ],
          [ "--key"        , "-k" , GetoptLong::REQUIRED_ARGUMENT ],                  
          [ "--file"        , "-f" , GetoptLong::REQUIRED_ARGUMENT ],
-         [ "--jsonpath"        , "-j" , GetoptLong::REQUIRED_ARGUMENT ]                   
+         [ "--jsonpath"        , "-j" , GetoptLong::REQUIRED_ARGUMENT ],
+         [ "--keys"        , "-e" , GetoptLong::REQUIRED_ARGUMENT ]                            
        ).enum_for.inject({}) { |h, (k, v)| h.update k.delete('-') => v }
 
 mode = "help" if opts["--help"]
@@ -84,7 +90,7 @@ else
   	abort USAGE
   end
   
-  if (mode != "load-json" && mode != "load-keys") && opts["key"] == nil
+  if (mode != "load-json" && mode != "load-keys" && mode != "save-json") && opts["key"] == nil
     abort USAGE
   end
   
@@ -101,6 +107,8 @@ else
   		cmdline.load_set()
   	when "load-zset"
   		cmdline.load_zset()
+  	when "save-json"
+  		cmdline.save_json()  		  		
   	when "save-list"
   		cmdline.save_list()  		
   	when "save-set"

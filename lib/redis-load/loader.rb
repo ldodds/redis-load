@@ -10,6 +10,28 @@ module RedisLoad
       @redis = redis      
     end
 
+    def to_json( pattern="*", limit=-1, opts=nil )
+      keys = @redis.keys(pattern)
+      h = Hash.new
+      counter = 0
+      keys.each do |key|
+        counter = counter + 1
+        type = @redis.type(key)
+        if type == "hash"
+          h[key] = @redis.hgetall(key)
+        elsif type == "list"
+          h[key] = @redis.lrange(key, 0, limit)
+        elsif type == "set"
+          h[key] = @redis.smembers(key)
+        elsif type == "zset"
+          h[key] = @redis.zrange(key, 0, limit)
+        else
+          h[key] = @redis.get(key)
+        end  
+      end     
+      return JSON.fast_generate(h, opts), counter
+    end
+        
     def load_keys(file)
       f = File.new( file )
       counter = process_lines(f) do |redis,line|
@@ -36,7 +58,7 @@ module RedisLoad
         json = Siren.query(query, json)
       end
       counter = 0
-      #TODO could support proper results, not just path?
+      #TODO could support proper results, not just hash?
       if json != nil
         json.each_pair do |key,value|
           if value.class() == Array
@@ -88,6 +110,16 @@ module RedisLoad
       return counter
     end
     
+    def save_json(file, pattern="*", limit=-1, opts=nil)
+      counter = 0
+      File.open( file, "w" ) do |file|
+        json, count = to_json(pattern, limit, opts)
+        file.write( json )
+        counter = count
+      end
+      return counter
+    end
+      
     def save_list(key, file)
       size = @redis.llen( key )
       count = 0

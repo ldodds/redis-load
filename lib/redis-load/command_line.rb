@@ -49,6 +49,13 @@ module RedisLoad
       puts "#{counter} lines loaded."
     end
 
+    def save_json()      
+      puts "Saving json into #{@opts["file"]}"
+      keys = @opts["keys"] || "*"      
+      counter = @loader.save_json( @opts["file"], keys )
+      puts "#{counter} keys saved."      
+    end
+    
     def save_set()
       puts "Saving set #{@opts["key"]} into #{@opts["file"]}"
       size = @loader.save_set( @opts["key"], @opts["file"] )
