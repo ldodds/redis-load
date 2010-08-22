@@ -45,7 +45,7 @@ module RedisLoad
 
     def load_set()
       puts "Loading #{@opts["file"]} into set #{@opts["key"]} on server"
-      counter @loader.load_set( @opts["key"], @opts["file"] )
+      counter = @loader.load_set( @opts["key"], @opts["file"] )
       puts "#{counter} lines loaded."
     end
 
