@@ -105,7 +105,7 @@ module RedisLoad
       counter = process_lines(f) do |redis,line|
         line = line.chomp
         parts = line.split(",")
-        redis.set( key , parts[1], parts[0] )
+        redis.zadd( key , parts[1], parts[0] )
       end
       return counter
     end
